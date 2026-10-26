@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>CÔNG THỨC CHIHABCR - MASTER PRO SYSTEM</title>
+    <!-- Tailwind CSS for utility styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        body {
+            background: linear-gradient(135deg, #090d16 0%, #111827 100%);
+            color: #f8fafc;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            min-height: 100vh;
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #374151;
+            border-radius: 4px;
+        }
+        /* Glassmorphism card effect */
+        .glass-card {
+            background: rgba(17, 24, 39, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.9), 0 0 20px rgba(2, 132, 199, 0.15);
+        }
+        .bg-p { background-color: #2563eb; }
+        .bg-b { background-color: #dc2626; }
+        .bg-t { background-color: #16a34a; }
+        
+        .btn-choice {
+            transition: transform 0.1s, opacity 0.2s;
+        }
+        .btn-choice:active {
+            transform: scale(0.95);
+        }
+        
+        /* Modal Overlay */
+        .modal-overlay {
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(6px);
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center p-3 relative min-h-screen">
+
+    <!-- Watermark Top Right -->
+    <div class="fixed top-3 right-3 text-xs font-bold text-sky-400 bg-gray-900/90 border border-sky-400/50 px-3 py-1 rounded-full shadow-lg shadow-sky-500/10 z-50 tracking-widest uppercase pointer-events-none">
+        chihaobcr
+    </div>
+
+    <div class="w-full max-w-md glass-card rounded-2xl p-5 relative my-auto">
+        <!-- Header Title -->
+        <div class="text-center mb-5">
+            <h1 class="text-2xl font-extrabold text-sky-400 tracking-wide drop-shadow-md">CÔNG THỨC CHIHABCR</h1>
+            <p class="text-[11px] text-amber-400 font-semibold tracking-widest uppercase mt-1">HỆ THỐNG PHÂN TÍCH AI CHÍNH XÁC CAO</p>
+        </div>
+
+        <!-- SCREEN 0: HOME / MODE SELECTION -->
+        <div id="screenHome" class="space-y-4">
+            <div class="p-3.5 bg-gray-800/60 rounded-xl border border-gray-700 text-center text-xs text-gray-300">
+                Vui lòng chọn cổng truy cập hệ thống:
+            </div>
+
+            <div class="grid grid-cols-1 gap-3">
+                <!-- Tab 1: Admin Management -->
+                <button onclick="openAdminAuth()" class="w-full py-4 px-4 rounded-xl bg-gradient-to-r from-amber-600 to-amber-500 hover:from-amber-500 hover:to-amber-400 text-white font-bold text-sm shadow-lg shadow-amber-600/30 flex items-center justify-center gap-2 transition active:scale-95">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                    TAB 1: QUẢN LÝ ADMIN
+                </button>
+
+                <!-- Tab 2: Player Entrance -->
+                <button onclick="openUserAuth()" class="w-full py-4 px-4 rounded-xl bg-gradient-to-r from-sky-600 to-blue-600 hover:from-sky-500 hover:to-blue-500 text-white font-bold text-sm shadow-lg shadow-sky-600/30 flex items-center justify-center gap-2 transition active:scale-95">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    TAB 2: CHƠI! (ĐĂNG NHẬP VIP)
+                </button>
+            </div>
+        </div>
+
+        <!-- SCREEN 1: ADMIN MANAGEMENT PORTAL -->
+        <div id="screenAdmin" class="hidden space-y-4">
+            <div class="flex items-center justify-between border-b border-gray-700 pb-3">
+                <span class="text-xs font-bold text-amber-400 flex items-center gap-1 uppercase tracking-wider">
+                    👑 ADMIN: <span class="text-sky-400">lien1984</span>
+                </span>
+                <div class="flex items-center gap-2">
+                    <!-- Nút vào bàn chơi trực tiếp từ Admin -->
+                    <button onclick="adminQuickPlay()" class="text-xs font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 border border-emerald-400/50 px-3 py-1.5 rounded-lg shadow-md shadow-emerald-500/20 active:scale-95 transition">
+                        ⚡ VÀO BÀN CHƠI NGAY
+                    </button>
+                    <button onclick="navHome()" class="text-xs text-gray-400 hover:text-white bg-gray-800 border border-gray-700 px-3 py-1.5 rounded-lg">Đăng xuất</button>
+                </div>
+            </div>
+
+            <!-- Global Cost Info -->
+            <div class="bg-gray-800/60 p-3 rounded-xl border border-gray-700 flex justify-between items-center text-xs">
+                <span class="text-gray-300">Quy định phí dự đoán:</span>
+                <span class="text-amber-400 font-bold bg-amber-500/10 border border-amber-500/30 px-2.5 py-1 rounded-md">2 XU / 1 VÁN</span>
+            </div>
+
+            <!-- Create Account Box -->
+            <div class="bg-gray-800/80 p-3.5 rounded-xl border border-sky-500/30 space-y-2.5">
+                <h3 class="text-xs font-bold text-sky-400 uppercase tracking-wide">➕ Tạo Tài Khoản Người Chơi Mới</h3>
+                <div class="grid grid-cols-1 gap-2">
+                    <input type="text" id="newUsername" placeholder="Tên tài khoản (VD: user01)" class="bg-gray-900 border border-gray-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-sky-400">
+                    <div class="grid grid-cols-2 gap-2">
+                        <input type="password" id="newUserPass" placeholder="Mật khẩu Cấp 1" class="bg-gray-900 border border-gray-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-sky-400">
+                        <input type="password" id="newUserPass2" placeholder="Mật khẩu Cấp 2" class="bg-gray-900 border border-gray-700 rounded-lg p-2 text-xs text-white focus:outline-none focus:border-sky-400">
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <input type="number" id="newUserCoins" placeholder="Số xu khởi tạo" value="50" class="w-1/2 bg-gray-900 border border-gray-700 rounded-lg p-2 text-xs text-amber-400 font-bold focus:outline-none focus:border-sky-400">
+                    <button onclick="createNewUser()" class="w-1/2 bg-sky-600 hover:bg-sky-500 text-white font-bold rounded-lg text-xs py-2 shadow-md active:scale-95 transition">Tạo Tài Khoản</button>
+                </div>
+            </div>
+
+            <!-- User Accounts Manager List -->
+            <div class="space-y-2">
+                <h3 class="text-xs font-bold text-gray-400 uppercase tracking-wide flex justify-between">
+                    <span>📋 Danh Sách Người Chơi VIP</span>
+                    <span id="userCountText" class="text-sky-400">0 người</span>
+                </h3>
+
+                <div id="adminUserList" class="space-y-2 max-h-64 overflow-y-auto pr-1">
+                    <!-- Dynamic User Account Cards -->
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 2: PLAYER GAME PORTAL -->
+        <div id="screenGame" class="hidden space-y-4">
+            <!-- User Balance Status Header -->
+            <div class="bg-gray-800/80 border border-sky-500/30 rounded-xl p-3 flex justify-between items-center">
+                <div>
+                    <div class="text-xs text-gray-300">Chào mừng: <span id="gameUserDisplay" class="font-bold text-sky-400">---</span></div>
+                    <div class="text-xs text-amber-400 font-bold mt-0.5">💰 Số Dư: <span id="gameUserCoins">0</span> Xu</div>
+                </div>
+                <button onclick="logoutUser()" class="text-xs bg-red-900/50 hover:bg-red-800 border border-red-700 text-red-200 px-3 py-1.5 rounded-lg">Thoát</button>
+            </div>
+
+            <!-- PHASE 1: INITIAL 15 ROUNDS SETUP -->
+            <div id="gameSetupPhase" class="space-y-3">
+                <div class="bg-amber-500/10 border border-amber-500/30 p-2.5 rounded-lg text-center text-xs text-amber-300 font-bold">
+                    ⚡ Nhập 15 ván lịch sử gần nhất để đồng bộ mô hình AI
+                </div>
+                
+                <div class="text-center text-xs text-gray-300" id="setupRoundText">
+                    Vui lòng chọn kết quả <strong class="text-sky-400">Ván thứ 1/15</strong>:
+                </div>
+
+                <div id="setupBadgeContainer" class="flex flex-wrap gap-1.5 justify-center bg-gray-900/80 p-3 rounded-xl border border-gray-800 min-h-[55px] items-center">
+                    <!-- 15 History Badges -->
+                </div>
+
+                <div class="grid grid-cols-3 gap-2">
+                    <button onclick="addSetupRound('P')" class="btn-choice bg-p text-white font-bold py-3 rounded-xl text-xs shadow-md">PLAYER (P)</button>
+                    <button onclick="addSetupRound('B')" class="btn-choice bg-b text-white font-bold py-3 rounded-xl text-xs shadow-md">BANKER (B)</button>
+                    <button onclick="addSetupRound('T')" class="btn-choice bg-t text-white font-bold py-3 rounded-xl text-xs shadow-md">TIE (T)</button>
+                </div>
+                
+                <button onclick="resetSetup()" class="w-full text-xs text-gray-400 hover:text-gray-200 border border-gray-700 py-1.5 rounded-lg">Làm lại từ đầu</button>
+            </div>
+
+            <!-- PHASE 2: MAIN PREDICTION WORKFLOW -->
+            <div id="gamePredictPhase" class="hidden space-y-3">
+                <!-- LIVE 15-ROUND ROAD DISPLAY -->
+                <div class="bg-gray-900/90 border border-gray-800 p-3 rounded-xl">
+                    <div class="text-[11px] font-bold text-sky-400 mb-2 text-center uppercase tracking-wider">
+                        📈 BẢNG CẦU 15 VÁN ĐỒNG BỘ THỜI GIAN THỰC
+                    </div>
+                    <div id="liveRoadGrid" class="flex flex-wrap gap-1.5 justify-center min-h-[32px] items-center"></div>
+                </div>
+
+                <div class="text-center text-xs font-bold text-amber-400 uppercase tracking-wider">
+                    CHỌN DỰ ĐOÁN VÁN MỚI (-2 XU / LẦN):
+                </div>
+
+                <div class="grid grid-cols-3 gap-2">
+                    <button onclick="triggerPrediction('P')" class="btn-choice bg-p text-white font-bold py-3.5 rounded-xl text-xs shadow-lg shadow-blue-600/20 active:scale-95">PLAYER (P)</button>
+                    <button onclick="triggerPrediction('B')" class="btn-choice bg-b text-white font-bold py-3.5 rounded-xl text-xs shadow-lg shadow-red-600/20 active:scale-95">BANKER (B)</button>
+                    <button onclick="triggerPrediction('T')" class="btn-choice bg-t text-white font-bold py-3.5 rounded-xl text-xs shadow-lg shadow-green-600/20 active:scale-95">TIE (T)</button>
+                </div>
+
+                <!-- PREDICTION RESULT CONTAINER -->
+                <div id="predictResultBox" class="hidden bg-gray-900/95 border border-gray-700 p-4 rounded-xl space-y-3">
+                    <!-- 3-SECOND LOADING -->
+                    <div id="predictLoading" class="space-y-2 text-center py-2">
+                        <div class="text-xs font-bold text-sky-400">⚡ Đang đồng bộ 15 ván lịch sử & phân tích AI...</div>
+                        <div class="w-full bg-gray-800 h-2.5 rounded-full overflow-hidden border border-gray-700">
+                            <div id="progressBar" class="bg-gradient-to-r from-sky-500 to-amber-400 h-full w-0 transition-all duration-75"></div>
+                        </div>
+                        <div id="progressPercent" class="text-xs font-bold text-amber-400">0%</div>
+                    </div>
+
+                    <!-- RESULT CONTENT DISPLAY -->
+                    <div id="predictContent" class="hidden space-y-3">
+                        <div id="trendBanner" class="bg-gray-800 border-l-4 border-amber-400 p-2.5 rounded text-xs font-bold text-amber-400 text-center">
+                            Đang phân tích nhịp bàn...
+                        </div>
+
+                        <div class="text-[11px] text-gray-400 font-bold uppercase">Hội Đồng 3 AI Dự Đoán Ván Tiếp Theo:</div>
+                        <div id="aiCardsContainer" class="space-y-2"></div>
+
+                        <!-- AI TRACK RECORD TABLE -->
+                        <div class="bg-gray-800/80 border border-gray-700 p-3 rounded-xl space-y-1.5">
+                            <div class="text-[11px] text-amber-400 font-bold text-center border-b border-gray-700 pb-1 uppercase">
+                                📊 Bảng Lịch Sử Đúng / Sai Của AI
+                            </div>
+                            <div id="aiTrackerList" class="space-y-1 text-xs">
+                                <div class="text-gray-500 text-center text-[11px]">Chưa có dữ liệu ván đấu nào.</div>
+                            </div>
+                        </div>
+
+                        <!-- SYNC ACTUAL RESULT FOR SCORING -->
+                        <div class="bg-gray-800/90 border border-amber-500/40 p-3 rounded-xl space-y-2 text-center">
+                            <div class="text-[11px] text-amber-300 font-bold uppercase">
+                                ⚓ XÁC NHẬN KẾT QUẢ THỰC TẾ VÁN VỪA RA ĐỂ CHẤM ĐIỂM AI:
+                            </div>
+                            <div class="grid grid-cols-3 gap-2">
+                                <button onclick="syncActualResult('P')" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-1.5 rounded-lg text-xs">PLAYER (P)</button>
+                                <button onclick="syncActualResult('B')" class="bg-red-600 hover:bg-red-500 text-white font-bold py-1.5 rounded-lg text-xs">BANKER (B)</button>
+                                <button onclick="syncActualResult('T')" class="bg-green-600 hover:bg-green-500 text-white font-bold py-1.5 rounded-lg text-xs">TIE (T)</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL POPUP FOR AUTHENTICATION -->
+    <div id="authModal" class="fixed inset-0 modal-overlay flex items-center justify-center p-4 z-50 hidden">
+        <div class="bg-gray-900 border border-sky-500/40 rounded-2xl w-full max-w-sm p-5 space-y-4 relative shadow-2xl">
+            <h2 id="modalTitle" class="text-sm font-bold text-sky-400 text-center uppercase tracking-wide">XÁC THỰC TRUY CẬP</h2>
+            
+            <!-- ADMIN LOGIN FORM (3 CRITERIA) -->
+            <div id="formAdminAuth" class="space-y-3 hidden">
+                <div class="text-[11px] text-amber-400 text-center font-semibold">Cổng đăng nhập Quản Trị Hệ Thống</div>
+                <div id="adminAuthErrMsg" class="hidden text-xs text-red-400 font-bold text-center bg-red-950/60 border border-red-500/40 p-2 rounded-lg">
+                    Thông tin đăng nhập không chính xác! Vui lòng liên hệ Admin!
+                </div>
+                <input type="text" id="adminUserLogin" placeholder="Tên tài khoản Admin" class="w-full bg-gray-800 border border-gray-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-amber-400">
+                <input type="password" id="adminPassLogin" placeholder="Mật khẩu Cấp 1" class="w-full bg-gray-800 border border-gray-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-amber-400">
+                <input type="password" id="adminPass2Login" placeholder="Mật khẩu Cấp 2" class="w-full bg-gray-800 border border-gray-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-amber-400">
+                <button onclick="submitAdminAuth()" class="w-full bg-amber-500 hover:bg-amber-400 text-gray-900 font-bold py-2.5 rounded-xl text-xs shadow-md">Đăng Nhập Admin</button>
+            </div>
+
+            <!-- PLAYER LOGIN FORM (3 CRITERIA) -->
+            <div id="formUserAuth" class="space-y-3 hidden">
+                <div class="text-[11px] text-sky-400 text-center font-semibold">Đăng nhập tài khoản được Admin cấp</div>
+                <div id="userAuthErrMsg" class="hidden text-xs text-red-400 font-bold text-center bg-red-950/60 border border-red-500/40 p-2 rounded-lg">
+                    Thông tin đăng nhập không chính xác! Vui lòng liên hệ Admin!
+                </div>
+                <input type="text" id="userLoginName" placeholder="Tên tài khoản" class="w-full bg-gray-800 border border-gray-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-sky-400">
+                <input type="password" id="userLoginPass" placeholder="Mật khẩu Cấp 1" class="w-full bg-gray-800 border border-gray-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-sky-400">
+                <input type="password" id="userLoginPass2" placeholder="Mật khẩu Cấp 2" class="w-full bg-gray-800 border border-gray-700 rounded-xl p-2.5 text-xs text-white focus:outline-none focus:border-sky-400">
+                <button onclick="submitUserAuth()" class="w-full bg-sky-600 hover:bg-sky-500 text-white font-bold py-2.5 rounded-xl text-xs shadow-md">Vào Chơi</button>
+            </div>
+
+            <button onclick="closeModal()" class="w-full text-xs text-gray-400 hover:text-white py-1">Hủy bỏ</button>
+        </div>
+    </div>
+
+    <script>
+        /* MECHANICAL KEYBOARD AUDIO FEEDBACK */
+        function playClickSound() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(300, audioCtx.currentTime + 0.04);
+                gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                gain.gain.linearRampToValueAtTime(0.001, audioCtx.currentTime + 0.04);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.04);
+            } catch(e) {}
+        }
+
+        /* HARDCODED OFFICIAL ADMIN CREDENTIALS */
+        const ADMIN_CREDENTIALS = {
+            username: "lien1984",
+            pass1: "chihao2010",
+            pass2: "168211"
+        };
+
+        /* LOCALSTORAGE DATABASE */
+        function getDB() {
+            const db = localStorage.getItem('chihabcr_db_v2');
+            if (db) return JSON.parse(db);
+            // Default player account for quick test
+            const initial = {
+                users: [
+                    { username: 'khach88', pass1: '123456', pass2: '888888', coins: 100 }
+                ]
+            };
+            localStorage.setItem('chihabcr_db_v2', JSON.stringify(initial));
+            return initial;
+        }
+
+        function saveDB(db) {
+            localStorage.setItem('chihabcr_db_v2', JSON.stringify(db));
+        }
+
+        /* APP STATE */
+        let currentUser = null;
+        let globalHistory = [];
+        let lastPredictions = {};
+        let aiStats = {
+            "ChatGPT (Chủ lực 1)": { correct: 0, total: 0 },
+            "Gemini (Chủ lực 2)": { correct: 0, total: 0 },
+            "DeepSeek (Thận trọng)": { correct: 0, total: 0 }
+        };
+
+        /* UI NAVIGATION HANDLERS */
+        function hideAllScreens() {
+            document.getElementById('screenHome').classList.add('hidden');
+            document.getElementById('screenAdmin').classList.add('hidden');
+            document.getElementById('screenGame').classList.add('hidden');
+        }
+
+        function navHome() {
+            playClickSound();
+            currentUser = null;
+            hideAllScreens();
+            document.getElementById('screenHome').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            playClickSound();
+            document.getElementById('authModal').classList.add('hidden');
+        }
+
+        /* AUTH MODALS */
+        function openAdminAuth() {
+            playClickSound();
+            document.getElementById('modalTitle').innerText = "🔑 XÁC THỰC ADMIN SYSTEM";
+            document.getElementById('adminAuthErrMsg').classList.add('hidden');
+            document.getElementById('formAdminAuth').classList.remove('hidden');
+            document.getElementById('formUserAuth').classList.add('hidden');
+            document.getElementById('adminUserLogin').value = '';
+            document.getElementById('adminPassLogin').value = '';
+            document.getElementById('adminPass2Login').value = '';
+            document.getElementById('authModal').classList.remove('hidden');
+        }
+
+        function submitAdminAuth() {
+            playClickSound();
+            const u = document.getElementById('adminUserLogin').value.trim();
+            const p1 = document.getElementById('adminPassLogin').value.trim();
+            const p2 = document.getElementById('adminPass2Login').value.trim();
+
+            if (u === ADMIN_CREDENTIALS.username && p1 === ADMIN_CREDENTIALS.pass1 && p2 === ADMIN_CREDENTIALS.pass2) {
+                document.getElementById('adminAuthErrMsg').classList.add('hidden');
+                closeModal();
+                hideAllScreens();
+                renderAdminPanel();
+                document.getElementById('screenAdmin').classList.remove('hidden');
+            } else {
+                document.getElementById('adminAuthErrMsg').classList.remove('hidden');
+                alert("Thông tin đăng nhập không chính xác! Vui lòng liên hệ Admin!");
+            }
+        }
+
+        function openUserAuth() {
+            playClickSound();
+            document.getElementById('modalTitle').innerText = "👤 ĐĂNG NHẬP NGƯỜI CHƠI VIP";
+            document.getElementById('userAuthErrMsg').classList.add('hidden');
+            document.getElementById('formUserAuth').classList.remove('hidden');
+            document.getElementById('formAdminAuth').classList.add('hidden');
+            document.getElementById('userLoginName').value = '';
+            document.getElementById('userLoginPass').value = '';
+            document.getElementById('userLoginPass2').value = '';
+            document.getElementById('authModal').classList.remove('hidden');
+        }
+
+        function submitUserAuth() {
+            playClickSound();
+            const u = document.getElementById('userLoginName').value.trim();
+            const p1 = document.getElementById('userLoginPass').value.trim();
+            const p2 = document.getElementById('userLoginPass2').value.trim();
+
+            const db = getDB();
+            const found = db.users.find(x => x.username.toLowerCase() === u.toLowerCase() && x.pass1 === p1 && x.pass2 === p2);
+
+            if (found) {
+                document.getElementById('userAuthErrMsg').classList.add('hidden');
+                currentUser = found.username;
+                closeModal();
+                hideAllScreens();
+                initGameScreen();
+                document.getElementById('screenGame').classList.remove('hidden');
+            } else {
+                document.getElementById('userAuthErrMsg').classList.remove('hidden');
+                alert("Thông tin đăng nhập không chính xác! Vui lòng liên hệ Admin!");
+            }
+        }
+
+        function openUserAuth() {
+            playClickSound();
+            document.getElementById('modalTitle').innerText = "👤 ĐĂNG NHẬP NGƯỜI CHƠI VIP";
+            document.getElementById('formUserAuth').classList.remove('hidden');
+            document.getElementById('formAdminAuth').classList.add('hidden');
+            document.getElementById('userLoginName').value = '';
+            document.getElementById('userLoginPass').value = '';
+            document.getElementById('userLoginPass2').value = '';
+            document.getElementById('authModal').classList.remove('hidden');
+        }
+
+        function submitUserAuth() {
+            playClickSound();
+            const u = document.getElementById('userLoginName').value.trim();
+            const p1 = document.getElementById('userLoginPass').value.trim();
+            const p2 = document.getElementById('userLoginPass2').value.trim();
+
+            const db = getDB();
+            const found = db.users.find(x => x.username.toLowerCase() === u.toLowerCase() && x.pass1 === p1 && x.pass2 === p2);
+
+            if (found) {
+                currentUser = found.username;
+                closeModal();
+                hideAllScreens();
+                initGameScreen();
+                document.getElementById('screenGame').classList.remove('hidden');
+            } else {
+                alert("Tài khoản hoặc mật khẩu không đúng! Vui lòng liên hệ Admin lien1984.");
+            }
+        }
+
+        /* ADMIN QUICK PLAY BUTTON FUNCTION */
+        function adminQuickPlay() {
+            playClickSound();
+            currentUser = "lien1984 (Admin)";
+            hideAllScreens();
+            
+            // Ensure Admin has unlimited or full coins display
+            const db = getDB();
+            let adminInDb = db.users.find(x => x.username === "lien1984 (Admin)");
+            if (!adminInDb) {
+                adminInDb = { username: "lien1984 (Admin)", pass1: "chihao2010", pass2: "168211", coins: 999999 };
+                db.users.push(adminInDb);
+                saveDB(db);
+            }
+
+            initGameScreen();
+            document.getElementById('screenGame').classList.remove('hidden');
+        }
+
+        /* ADMIN PORTAL FUNCTIONS */
+        function renderAdminPanel() {
+            const db = getDB();
+            // Filter out internal admin display if present in list
+            const userListOnly = db.users.filter(u => u.username !== "lien1984 (Admin)");
+            document.getElementById('userCountText').innerText = `${userListOnly.length} tài khoản`;
+
+            const list = document.getElementById('adminUserList');
+            list.innerHTML = '';
+
+            userListOnly.forEach((u) => {
+                const realIndex = db.users.findIndex(x => x.username === u.username);
+                const card = document.createElement('div');
+                card.className = "bg-gray-900 border border-gray-800 p-3 rounded-xl flex items-center justify-between text-xs";
+                card.innerHTML = `
+                    <div>
+                        <div class="font-bold text-sky-400">${u.username}</div>
+                        <div class="text-[10px] text-gray-400">MK1: ${u.pass1} | MK2: ${u.pass2}</div>
+                        <div class="text-amber-400 font-bold mt-0.5">Xu: ${u.coins}</div>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <button onclick="changeCoins(${realIndex}, 10)" class="bg-amber-600/30 hover:bg-amber-600/50 text-amber-300 border border-amber-600/50 px-2 py-1 rounded text-[11px] font-bold">+10</button>
+                        <button onclick="changeCoins(${realIndex}, -10)" class="bg-gray-800 hover:bg-gray-700 text-gray-300 border border-gray-600 px-2 py-1 rounded text-[11px] font-bold">-10</button>
+                        <button onclick="editUserModal(${realIndex})" class="bg-sky-600/30 hover:bg-sky-600/50 text-sky-300 border border-sky-600/50 px-2 py-1 rounded text-[11px] font-bold">Sửa</button>
+                        <button onclick="deleteUser(${realIndex})" class="bg-red-900/40 hover:bg-red-800 text-red-300 border border-red-700 px-2 py-1 rounded text-[11px] font-bold">Xóa</button>
+                    </div>
+                `;
+                list.appendChild(card);
+            });
+        }
+
+        function createNewUser() {
+            playClickSound();
+            const u = document.getElementById('newUsername').value.trim();
+            const p1 = document.getElementById('newUserPass').value.trim();
+            const p2 = document.getElementById('newUserPass2').value.trim();
+            const c = parseInt(document.getElementById('newUserCoins').value) || 0;
+
+            if (!u || !p1 || !p2) {
+                alert("Vui lòng nhập đầy đủ Tên tài khoản, MK Cấp 1 và MK Cấp 2!");
+                return;
+            }
+
+            const db = getDB();
+            if (db.users.some(x => x.username.toLowerCase() === u.toLowerCase())) {
+                alert("Tên tài khoản này đã tồn tại!");
+                return;
+            }
+
+            db.users.push({ username: u, pass1: p1, pass2: p2, coins: c });
+            saveDB(db);
+
+            document.getElementById('newUsername').value = '';
+            document.getElementById('newUserPass').value = '';
+            document.getElementById('newUserPass2').value = '';
+            renderAdminPanel();
+        }
+
+        function changeCoins(index, amount) {
+            playClickSound();
+            const db = getDB();
+            if (db.users[index]) {
+                db.users[index].coins = Math.max(0, db.users[index].coins + amount);
+                saveDB(db);
+                renderAdminPanel();
+            }
+        }
+
+        function editUserModal(index) {
+            playClickSound();
+            const db = getDB();
+            const u = db.users[index];
+            if (!u) return;
+
+            const newCoins = prompt(`Nhập số Xu mới cho [${u.username}]:`, u.coins);
+            if (newCoins !== null) {
+                const val = parseInt(newCoins);
+                if (!isNaN(val) && val >= 0) u.coins = val;
+            }
+
+            const newP1 = prompt(`Nhập Mật khẩu Cấp 1 mới cho [${u.username}] (để trống nếu giữ nguyên):`, u.pass1);
+            if (newP1) u.pass1 = newP1.trim();
+
+            const newP2 = prompt(`Nhập Mật khẩu Cấp 2 mới cho [${u.username}] (để trống nếu giữ nguyên):`, u.pass2);
+            if (newP2) u.pass2 = newP2.trim();
+
+            saveDB(db);
+            renderAdminPanel();
+        }
+
+        function deleteUser(index) {
+            playClickSound();
+            const db = getDB();
+            if (confirm(`Bạn chắc chắn muốn xóa tài khoản ${db.users[index].username}?`)) {
+                db.users.splice(index, 1);
+                saveDB(db);
+                renderAdminPanel();
+            }
+        }
+
+        /* PLAYER GAME FUNCTIONS */
+        function initGameScreen() {
+            const db = getDB();
+            const userObj = db.users.find(x => x.username === currentUser);
+            document.getElementById('gameUserDisplay').innerText = currentUser;
+            document.getElementById('gameUserCoins').innerText = userObj ? userObj.coins : 0;
+
+            globalHistory = [];
+            document.getElementById('gameSetupPhase').classList.remove('hidden');
+            document.getElementById('gamePredictPhase').classList.add('hidden');
+            updateSetupUI();
+        }
+
+        function logoutUser() {
+            playClickSound();
+            navHome();
+        }
+
+        function addSetupRound(val) {
+            playClickSound();
+            if (globalHistory.length < 15) {
+                globalHistory.push(val);
+                updateSetupUI();
+            }
+            if (globalHistory.length === 15) {
+                document.getElementById('gameSetupPhase').classList.add('hidden');
+                document.getElementById('gamePredictPhase').classList.remove('hidden');
+                updateLiveRoad();
+            }
+        }
+
+        function updateSetupUI() {
+            document.getElementById('setupRoundText').innerHTML = `Vui lòng chọn kết quả <strong class="text-sky-400">Ván thứ ${globalHistory.length + 1}/15</strong>:`;
+            const container = document.getElementById('setupBadgeContainer');
+            container.innerHTML = '';
+
+            globalHistory.forEach(item => {
+                const badge = document.createElement('div');
+                badge.className = `w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs text-white bg-${item.toLowerCase()}`;
+                badge.innerText = item;
+                container.appendChild(badge);
+            });
+
+            for (let i = globalHistory.length; i < 15; i++) {
+                const ph = document.createElement('div');
+                ph.className = "w-7 h-7 rounded-full border-2 border-dashed border-gray-700";
+                container.appendChild(ph);
+            }
+        }
+
+        function updateLiveRoad() {
+            const container = document.getElementById('liveRoadGrid');
+            container.innerHTML = '';
+            const road = globalHistory.slice(-15);
+            road.forEach(item => {
+                const badge = document.createElement('div');
+                badge.className = `w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs text-white shadow-md bg-${item.toLowerCase()}`;
+                badge.innerText = item;
+                container.appendChild(badge);
+            });
+        }
+
+        function resetSetup() {
+            playClickSound();
+            globalHistory = [];
+            aiStats = {
+                "ChatGPT (Chủ lực 1)": { correct: 0, total: 0 },
+                "Gemini (Chủ lực 2)": { correct: 0, total: 0 },
+                "DeepSeek (Thận trọng)": { correct: 0, total: 0 }
+            };
+            initGameScreen();
+        }
+
+        /* PREDICTION ENGINE WITH COIN DEDUCTION (2 XU / ROUND) */
+        function triggerPrediction(choice) {
+            playClickSound();
+            const db = getDB();
+            const uIndex = db.users.findIndex(x => x.username === currentUser);
+
+            if (uIndex === -1) {
+                alert("Tài khoản không tồn tại!");
+                return;
+            }
+
+            if (db.users[uIndex].coins < 2) {
+                alert("Số dư không đủ! Mỗi ván dự đoán tốn 2 Xu. Vui lòng liên hệ Admin lien1984 để nạp thêm.");
+                return;
+            }
+
+            // Deduct 2 coins per prediction attempt
+            db.users[uIndex].coins -= 2;
+            saveDB(db);
+            document.getElementById('gameUserCoins').innerText = db.users[uIndex].coins;
+
+            // UI Elements
+            const box = document.getElementById('predictResultBox');
+            const loading = document.getElementById('predictLoading');
+            const content = document.getElementById('predictContent');
+            const bar = document.getElementById('progressBar');
+            const pct = document.getElementById('progressPercent');
+
+            box.classList.remove('hidden');
+            loading.classList.remove('hidden');
+            content.classList.add('hidden');
+
+            let currentPct = 0;
+            bar.style.width = '0%';
+            pct.innerText = '0%';
+
+            const interval = 30;
+            const increment = 100 / (3000 / interval);
+
+            const timer = setInterval(() => {
+                currentPct += increment;
+                if (currentPct >= 100) {
+                    currentPct = 100;
+                    clearInterval(timer);
+                    bar.style.width = '100%';
+                    pct.innerText = '100%';
+
+                    setTimeout(() => {
+                        loading.classList.add('hidden');
+                        renderAIResults();
+                    }, 150);
+                } else {
+                    const rounded = Math.floor(currentPct);
+                    bar.style.width = rounded + '%';
+                    pct.innerText = rounded + '%';
+                }
+            }, interval);
+        }
+
+        function renderAIResults() {
+            let reversals = 0;
+            for (let i = globalHistory.length - 1; i > 0; i--) {
+                if (globalHistory[i] !== globalHistory[i-1] && globalHistory[i] !== 'T' && globalHistory[i-1] !== 'T') {
+                    reversals++;
+                }
+            }
+
+            const isCutting = reversals >= 5;
+            document.getElementById('trendBanner').innerText = isCutting 
+                ? "⚡ NHỊP BÀN 15 VÁN: ĐANG ĐẢO CHIỀU (BẺ CẦU SÂU)" 
+                : "⚡ NHỊP BÀN 15 VÁN: ĐANG CHẠY BỆT ỔN ĐỊNH (THEO CẦU)";
+
+            let lastReal = globalHistory[globalHistory.length - 1] || 'P';
+            if (lastReal === 'T') lastReal = 'P';
+            let opposite = lastReal === 'P' ? 'B' : 'P';
+
+            let mainBias = isCutting ? opposite : lastReal;
+            let dissentingBias = mainBias === 'P' ? 'B' : 'P';
+
+            lastPredictions = {
+                "ChatGPT (Chủ lực 1)": mainBias,
+                "Gemini (Chủ lực 2)": mainBias,
+                "DeepSeek (Thận trọng)": dissentingBias
+            };
+
+            const aiList = [
+                { name: "ChatGPT (Chủ lực 1)", bias: mainBias, rate: 95 },
+                { name: "Gemini (Chủ lực 2)", bias: mainBias, rate: 92 },
+                { name: "DeepSeek (Thận trọng)", bias: dissentingBias, rate: 35 }
+            ];
+
+            const container = document.getElementById('aiCardsContainer');
+            container.innerHTML = '';
+
+            aiList.forEach(ai => {
+                const choiceText = ai.bias === 'P' ? 'PLAYER (XANH)' : 'BANKER (ĐỎ)';
+                const badgeBg = ai.rate < 50 ? 'bg-gray-700 text-gray-300' : (ai.bias === 'P' ? 'bg-blue-600 text-white' : 'bg-red-600 text-white');
+
+                const card = document.createElement('div');
+                card.className = "bg-gray-800 border border-gray-700 p-2.5 rounded-lg flex items-center justify-between";
+                card.innerHTML = `
+                    <span class="text-xs font-bold text-sky-400">${ai.name}</span>
+                    <span class="text-xs font-bold px-2.5 py-1 rounded-md shadow ${badgeBg}">${choiceText} (${ai.rate}%)</span>
+                `;
+                container.appendChild(card);
+            });
+
+            document.getElementById('predictContent').classList.remove('hidden');
+        }
+
+        function syncActualResult(actualCode) {
+            playClickSound();
+
+            globalHistory.push(actualCode);
+            if (globalHistory.length > 30) globalHistory.shift();
+            updateLiveRoad();
+
+            const trackerList = document.getElementById('aiTrackerList');
+            let html = "";
+
+            for (let aiName in lastPredictions) {
+                aiStats[aiName].total++;
+                const predicted = lastPredictions[aiName];
+                const isCorrect = (predicted === actualCode);
+                if (isCorrect) aiStats[aiName].correct++;
+
+                const stat = aiStats[aiName];
+                const pct = stat.total > 0 ? Math.round((stat.correct / stat.total) * 100) : 0;
+                const badge = isCorrect ? `<span class="text-green-400 font-bold">✓ Đúng</span>` : `<span class="text-red-400 font-bold">✗ Sai</span>`;
+
+                html += `
+                    <div class="flex justify-between items-center border-b border-gray-800 pb-1 text-[11px]">
+                        <span class="text-sky-400 font-bold">${aiName.split(' ')[0]}</span>
+                        <span>Đoán: <strong>${predicted}</strong> | ${badge}</span>
+                        <span class="text-gray-400">Độ chuẩn: ${pct}% (${stat.correct}/${stat.total})</span>
+                    </div>
+                `;
+            }
+
+            trackerList.innerHTML = html;
+            document.getElementById('predictResultBox').classList.add('hidden');
+        }
+
+        // Initialize local database state
+        getDB();
+    </script>
+</body>
+</html>
